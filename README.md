@@ -107,7 +107,11 @@ When you implement your solution, please make sure your repository includes:
 
 For this challenge repository, your task is to:
 
-1. Implement the AG Grid-based table as described above.
-2. Add appropriate tests.
-3. Ensure the app runs reliably and performs well with large datasets.
+1. **Fork** this repository to your own GitHub account.
+2. Implement the AG Grid-based table as described above.
+3. Add appropriate tests.
+4. Ensure the app runs reliably and performs well with large datasets.
+5. **Open a Pull Request** from your fork back to this repository (`Farghoo/binary-sunset-fe-challenge`) with:
+   - A clear title and short description of your solution.
+   - Any notes on trade-offs, assumptions, or limitations.
 
