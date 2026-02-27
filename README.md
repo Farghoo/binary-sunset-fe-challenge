@@ -88,6 +88,8 @@ The solution should be **robust, well-tested**, and capable of handling **large 
 
 - **Framework**: React
 - **Grid library**: AG Grid (latest stable version)
+  - Official React getting started guide: [`https://www.ag-grid.com/react-data-grid/getting-started/`](https://www.ag-grid.com/react-data-grid/getting-started/)
+  - You may use the **AG Grid Enterprise** version **for testing purposes** if you wish; the evaluation **watermark is acceptable** for this challenge.
 - **Testing**:
   - Jest
   - React Testing Library
