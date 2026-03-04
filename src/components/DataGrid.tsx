@@ -3,6 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef, GridOptions, ValueGetterParams, CellValueChangedEvent, ICellRendererParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import '../App.css';
 
 import { DataRow } from '../types/data';
 import { ChipsRenderer } from './renderers/ChipsRenderer';
@@ -16,11 +17,50 @@ interface DataGridProps {
 
 export const DataGrid: React.FC<DataGridProps> = ({ rowData }) => {
   const [data, setData] = useState<DataRow[]>(rowData);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [totalFilterValue, setTotalFilterValue] = useState<string>('');
+  const [totalFilterOperator, setTotalFilterOperator] = useState<'greater' | 'less'>('greater');
 
   // Sync state with prop when rowData changes
   useEffect(() => {
     setData(rowData);
   }, [rowData]);
+
+  // Calculate total for a row (same logic as totalGetter)
+  const calculateRowTotal = useCallback((row: DataRow): number => {
+    const subtotal = row.quantity * row.unitPrice;
+    return subtotal * (1 - (row.discount || 0) / 100);
+  }, []);
+
+  // Filter data based on search term (productName and category) and total filter
+  const filteredData = useMemo(() => {
+    let result = data;
+
+    // Apply search filter
+    if (searchTerm.trim()) {
+      const lowerSearchTerm = searchTerm.toLowerCase().trim();
+      result = result.filter((row) => {
+        const productNameMatch = row.productName?.toLowerCase().includes(lowerSearchTerm);
+        const categoryMatch = row.category?.toLowerCase().includes(lowerSearchTerm);
+        return productNameMatch || categoryMatch;
+      });
+    }
+
+    // Apply total filter
+    if (totalFilterValue.trim()) {
+      const filterNumber = parseFloat(totalFilterValue);
+      if (!isNaN(filterNumber)) {
+        result = result.filter((row) => {
+          const rowTotal = calculateRowTotal(row);
+          return totalFilterOperator === 'greater' 
+            ? rowTotal > filterNumber 
+            : rowTotal < filterNumber;
+        });
+      }
+    }
+
+    return result;
+  }, [data, searchTerm, totalFilterValue, totalFilterOperator, calculateRowTotal]);
 
   // Memoize value formatters and getters to prevent unnecessary re-renders
   const unitPriceFormatter = useCallback((params: { value?: number }) => {
@@ -211,10 +251,78 @@ export const DataGrid: React.FC<DataGridProps> = ({ rowData }) => {
   );
 
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      <div className="ag-theme-alpine" style={{ width: '100%', height: '100%' }}>
+    <div className="data-grid-container">
+      {/* Search Input */}
+      <div className="search-section">
+        <label htmlFor="search-input" className="search-label">
+          Search:
+        </label>
+        <input
+          id="search-input"
+          type="text"
+          className="search-input"
+          placeholder="Search by product name or category..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {searchTerm && (
+          <button
+            onClick={() => setSearchTerm('')}
+            className="search-clear-button"
+          >
+            Clear
+          </button>
+        )}
+        {searchTerm && (
+          <span className="search-results-count">
+            {filteredData.length} result{filteredData.length !== 1 ? 's' : ''} found
+          </span>
+        )}
+      </div>
+
+      {/* Total Filter */}
+      <div className="total-filter-section">
+        <label htmlFor="total-filter" className="total-filter-label">
+          Total:
+        </label>
+        <select
+          id="total-operator"
+          className="total-filter-select"
+          value={totalFilterOperator}
+          onChange={(e) => setTotalFilterOperator(e.target.value as 'greater' | 'less')}
+        >
+          <option value="greater">Greater than (&gt;)</option>
+          <option value="less">Less than (&lt;)</option>
+        </select>
+        <input
+          id="total-filter"
+          type="number"
+          className="total-filter-input"
+          placeholder="Enter amount..."
+          value={totalFilterValue}
+          onChange={(e) => setTotalFilterValue(e.target.value)}
+        />
+        {totalFilterValue && (
+          <button
+            onClick={() => {
+              setTotalFilterValue('');
+              setTotalFilterOperator('greater');
+            }}
+            className="total-filter-clear-button"
+          >
+            Clear
+          </button>
+        )}
+        {(searchTerm || totalFilterValue) && (
+          <span className="filter-results-count">
+            Showing {filteredData.length} of {data.length} row{data.length !== 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
+      
+      <div className="ag-theme-alpine data-grid-wrapper">
         <AgGridReact<DataRow>
-          rowData={data}
+          rowData={filteredData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           gridOptions={gridOptions}
