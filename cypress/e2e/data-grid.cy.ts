@@ -15,55 +15,110 @@ describe('Data Grid E2E Tests', () => {
     // Wait for grid to load
     cy.get('.ag-theme-alpine').should('be.visible');
     
-    // Check if status chips are rendered (they should have specific styling)
+    // Check if status chips are rendered with correct styling
     cy.get('.ag-row').first().within(() => {
-      cy.get('[style*="border-radius"]').should('exist');
+      // Status column is the last one (index 9)
+      cy.get('.ag-cell').eq(9).within(() => {
+        // Should have a chip with border-radius (styling characteristic)
+        cy.get('span[style*="border-radius"]').should('exist');
+        // Should contain one of the valid status texts
+        cy.get('span').then(($span) => {
+          const text = $span.text();
+          const validStatuses = ['High Priority', 'Pending', 'Completed', 'Warning', 'Normal'];
+          const hasValidStatus = validStatuses.some(status => text.includes(status));
+          expect(hasValidStatus).to.be.true;
+        });
+        // Should have background color (chips have colored backgrounds)
+        cy.get('span[style*="background-color"]').should('exist');
+      });
     });
   });
 
   it('should allow editing quantity and trigger recalculation', () => {
     cy.get('.ag-theme-alpine').should('be.visible');
     
-    // Find the first row and get initial values
+    // Edit quantity
     cy.get('.ag-row').first().within(() => {
-      // Get the quantity cell (4th column, index 3)
       cy.get('.ag-cell').eq(3).within(() => {
         cy.get('input').clear().type('50');
       });
     });
 
     // Wait for recalculation
-    cy.wait(100);
+    cy.wait(200);
 
-    // Verify that calculated columns have updated
+    // Verify that calculated columns have updated with correct format and values
     cy.get('.ag-row').first().within(() => {
-      // Check that subtotal and total columns show updated values
-      cy.get('.ag-cell').should('contain.text', '$');
+      // Get both subtotal and total to verify relationship
+      cy.get('.ag-cell').eq(7).then(($subtotalCell) => {
+        const subtotalText = $subtotalCell.text();
+        expect(subtotalText).to.include('$');
+        const subtotal = parseFloat(subtotalText.replace('$', '').replace(/,/g, ''));
+        expect(subtotal).to.be.a('number');
+        expect(subtotal).to.be.greaterThan(0);
+
+        // Verify total column
+        cy.get('.ag-cell').eq(8).should(($totalCell) => {
+          const totalText = $totalCell.text();
+          expect(totalText).to.include('$');
+          const total = parseFloat(totalText.replace('$', '').replace(/,/g, ''));
+          expect(total).to.be.a('number');
+          expect(total).to.be.greaterThan(0);
+          // Total should be less than or equal to subtotal (after discount)
+          expect(total).to.be.at.most(subtotal);
+        });
+      });
     });
   });
 
   it('should allow editing unit price and update dependent calculations', () => {
     cy.get('.ag-theme-alpine').should('be.visible');
     
+    // Edit unit price
     cy.get('.ag-row').first().within(() => {
-      // Edit unit price (5th column, index 4)
       cy.get('.ag-cell').eq(4).within(() => {
         cy.get('input').clear().type('100');
       });
     });
 
-    cy.wait(100);
+    cy.wait(200);
 
-    // Verify calculations updated
+    // Verify calculations updated with correct format and values
     cy.get('.ag-row').first().within(() => {
-      cy.get('.ag-cell').should('contain.text', '$');
+      // Subtotal column should contain $ and a valid number
+      cy.get('.ag-cell').eq(7).should(($cell) => {
+        const text = $cell.text();
+        expect(text).to.include('$');
+        const subtotal = parseFloat(text.replace('$', '').replace(/,/g, ''));
+        expect(subtotal).to.be.a('number');
+        expect(subtotal).to.be.greaterThan(0);
+      });
+
+      // Total column should contain $ and a valid number
+      cy.get('.ag-cell').eq(8).should(($cell) => {
+        const text = $cell.text();
+        expect(text).to.include('$');
+        const total = parseFloat(text.replace('$', '').replace(/,/g, ''));
+        expect(total).to.be.a('number');
+        expect(total).to.be.greaterThan(0);
+      });
     });
   });
 
   it('should update status chip when total value changes', () => {
     cy.get('.ag-theme-alpine').should('be.visible');
     
-    // Edit values to trigger status change
+    // Get initial status
+    let initialStatus: string;
+    cy.get('.ag-row').first().within(() => {
+      cy.get('.ag-cell').eq(9).within(() => {
+        cy.get('span').invoke('text').then((text) => {
+          initialStatus = text.trim();
+        });
+      });
+    });
+
+    // Edit values to trigger status change to Warning (total < 50)
     cy.get('.ag-row').first().within(() => {
       // Set a very low value to trigger Warning status
       cy.get('.ag-cell').eq(3).within(() => {
@@ -74,11 +129,20 @@ describe('Data Grid E2E Tests', () => {
       });
     });
 
-    cy.wait(200);
+    cy.wait(300);
 
-    // Status should reflect the change (Warning for low total)
+    // Status should reflect the change (Warning for low total < $50)
     cy.get('.ag-row').first().within(() => {
-      cy.get('.ag-cell').should('exist');
+      cy.get('.ag-cell').eq(9).within(() => {
+        // Should contain Warning status
+        cy.get('span').should('contain.text', 'Warning');
+        // Should have Warning styling (orange background)
+        cy.get('span[style*="background-color"]').should(($chip) => {
+          const bgColor = $chip.css('background-color');
+          // Warning has rgb(255, 247, 237) background
+          expect(bgColor).to.include('255');
+        });
+      });
     });
   });
 

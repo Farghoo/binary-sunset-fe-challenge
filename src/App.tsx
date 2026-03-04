@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { DataGrid } from './components/DataGrid';
 import { generateDataset } from './utils/dataGenerator';
 import './App.css';
 
 function App() {
-  const rowData = useMemo(() => generateDataset(10000), []);
+  const rowData = useMemo(() => generateDataset(100000), []);
 
   return (
     <div className="App">

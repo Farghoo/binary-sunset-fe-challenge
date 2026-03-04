@@ -18,10 +18,12 @@ describe('ChipsRenderer', () => {
     formatValue: jest.fn(),
     valueFormatted: status,
     refreshCell: jest.fn(),
-    eGridCell: document.createElement('div'),
-    eParentOfValue: document.createElement('div'),
-    addRenderedRowListener: jest.fn(),
-  });
+      eGridCell: document.createElement('div'),
+      eParentOfValue: document.createElement('div'),
+      registerRowDragger: jest.fn(),
+      setTooltip: jest.fn(),
+      context: {},
+    } as ICellRendererParams);
 
   it('should render High Priority chip with correct styling', () => {
     const params = createMockParams('High Priority');

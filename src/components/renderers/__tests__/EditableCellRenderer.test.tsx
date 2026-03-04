@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import { EditableCellRenderer } from '../EditableCellRenderer';
@@ -35,35 +34,40 @@ describe('EditableCellRenderer', () => {
       refreshCell: jest.fn(),
       eGridCell: document.createElement('div'),
       eParentOfValue: document.createElement('div'),
-      addRenderedRowListener: jest.fn(),
-    };
+      registerRowDragger: jest.fn(),
+      setTooltip: jest.fn(),
+      context: {},
+    } as ICellRendererParams & { field: string; data: Record<string, unknown> };
   };
 
-  it('should render number input for quantity field', () => {
+  it('should render text input with decimal inputMode for quantity field', () => {
     const params = createMockParams(10, 'quantity');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     expect(input).toBeInTheDocument();
-    expect(input).toHaveValue(10);
+    expect(input).toHaveValue('10');
+    expect(input).toHaveAttribute('inputMode', 'decimal');
   });
 
-  it('should render number input for unitPrice field', () => {
+  it('should render text input with decimal inputMode for unitPrice field', () => {
     const params = createMockParams(25.5, 'unitPrice');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     expect(input).toBeInTheDocument();
-    expect(input).toHaveValue(25.5);
+    expect(input).toHaveValue('25.5');
+    expect(input).toHaveAttribute('inputMode', 'decimal');
   });
 
-  it('should render number input for discount field', () => {
+  it('should render text input with decimal inputMode for discount field', () => {
     const params = createMockParams(15, 'discount');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     expect(input).toBeInTheDocument();
-    expect(input).toHaveValue(15);
+    expect(input).toHaveValue('15');
+    expect(input).toHaveAttribute('inputMode', 'decimal');
   });
 
   it('should render text input for other fields', () => {
@@ -79,17 +83,17 @@ describe('EditableCellRenderer', () => {
     const params = createMockParams(10, 'quantity');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: '20' } });
 
-    expect(input).toHaveValue(20);
+    expect(input).toHaveValue('20');
   });
 
   it('should call node.setData and api.refreshCells on change', () => {
     const params = createMockParams(10, 'quantity');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: '20' } });
 
     expect(params.node.setData).toHaveBeenCalledWith(
@@ -105,7 +109,7 @@ describe('EditableCellRenderer', () => {
     const params = createMockParams(10, 'quantity');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     fireEvent.blur(input);
 
     expect(params.api.stopEditing).toHaveBeenCalled();
@@ -115,23 +119,24 @@ describe('EditableCellRenderer', () => {
     const params = createMockParams(10, 'quantity');
     render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'abc' } });
 
-    expect(input).toHaveValue(0);
+    // During editing, invalid input is kept as string, converted to 0 on blur
+    expect(input).toHaveValue('abc');
   });
 
   it('should update when value prop changes', () => {
     const params = createMockParams(10, 'quantity');
     const { rerender } = render(<EditableCellRenderer {...params} />);
 
-    const input = screen.getByRole('spinbutton');
-    expect(input).toHaveValue(10);
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveValue('10');
 
     const newParams = createMockParams(25, 'quantity');
     rerender(<EditableCellRenderer {...newParams} />);
 
-    expect(input).toHaveValue(25);
+    expect(input).toHaveValue('25');
   });
 });
 

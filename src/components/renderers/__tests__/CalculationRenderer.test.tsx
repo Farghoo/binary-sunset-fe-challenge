@@ -18,10 +18,12 @@ describe('CalculationRenderer', () => {
     formatValue: jest.fn(),
     valueFormatted: value.toString(),
     refreshCell: jest.fn(),
-    eGridCell: document.createElement('div'),
-    eParentOfValue: document.createElement('div'),
-    addRenderedRowListener: jest.fn(),
-  });
+      eGridCell: document.createElement('div'),
+      eParentOfValue: document.createElement('div'),
+      registerRowDragger: jest.fn(),
+      setTooltip: jest.fn(),
+      context: {},
+    } as ICellRendererParams);
 
   it('should render positive numbers correctly', () => {
     const params = createMockParams(1234.56);
