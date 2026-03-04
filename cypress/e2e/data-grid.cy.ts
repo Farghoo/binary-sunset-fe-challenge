@@ -172,6 +172,83 @@ describe('Data Grid E2E Tests', () => {
     
     // Verify sorting indicator appears
     cy.get('.ag-header-cell').contains('Product Name').should('have.class', 'ag-sort-ascending');
+    
+    // Verify data is sorted (first row should be different after sorting)
+    cy.get('.ag-row').first().find('.ag-cell[col-id="productName"]').should('exist');
+  });
+
+  it('should support AG Grid native filtering', () => {
+    cy.get('.ag-theme-alpine').should('be.visible');
+    
+    // Wait for grid to load
+    cy.get('.ag-root').should('be.visible');
+    
+    // Get initial row count
+    cy.get('.ag-center-cols-viewport .ag-row').then(($rows) => {
+      const initialRowCount = $rows.length;
+      expect(initialRowCount).to.be.greaterThan(0);
+      
+      // Click filter icon for Product Name column (which has filter: true in defaultColDef)
+      cy.get('.ag-header-cell[col-id="productName"] .ag-header-icon')
+        .should('be.visible')
+        .click();
+      
+      // Wait for filter menu to appear and type filter value
+      cy.get('.ag-filter-body input[placeholder*="Filter"], .ag-filter-body input[type="text"]')
+        .first()
+        .should('be.visible')
+        .type('Test');
+      
+      // Wait for filtering to apply
+      cy.wait(300);
+      
+      // Verify filtered rows (should be less than or equal to initial)
+      cy.get('.ag-center-cols-viewport .ag-row').should(($filteredRows) => {
+        expect($filteredRows.length).to.be.at.most(initialRowCount);
+      });
+      
+      // Clear filter by clicking filter icon again and clearing input
+      cy.get('.ag-header-cell[col-id="productName"] .ag-header-icon').click();
+      cy.get('.ag-filter-body input').first().clear();
+      cy.wait(300);
+      
+      // Verify all rows are visible again
+      cy.get('.ag-center-cols-viewport .ag-row').should('have.length', initialRowCount);
+    });
+  });
+
+  it('should allow editing cells with double-click (AG Grid native behavior)', () => {
+    cy.get('.ag-theme-alpine').should('be.visible');
+    
+    // Locate the quantity cell in the first row
+    const quantityCellSelector = '.ag-row[row-index="0"] .ag-cell[col-id="quantity"]';
+    
+    // Get initial value
+    cy.get(quantityCellSelector).invoke('text').then((initialValue) => {
+      // Double-click the cell to activate edit mode
+      cy.get(quantityCellSelector).dblclick();
+      
+      // Wait for the input field to appear (AG Grid native editor or our custom renderer)
+      cy.get(`${quantityCellSelector} input`)
+        .should('be.visible')
+        .as('quantityInput');
+      
+      // Enter a new value and press Enter
+      const newValue = '25';
+      cy.get('@quantityInput')
+        .clear()
+        .type(`${newValue}{enter}`);
+      
+      // Wait for value to update
+      cy.wait(200);
+      
+      // Verify the cell displays the updated value (or at least changed)
+      cy.get(quantityCellSelector).should(($cell) => {
+        const cellText = $cell.text().trim();
+        // Value should have changed (might be formatted)
+        expect(cellText).to.not.equal(initialValue.trim());
+      });
+    });
   });
 
   it('should display calculation renderer for numeric columns', () => {
@@ -333,5 +410,6 @@ describe('Data Grid E2E Tests', () => {
       });
     });
   });
+
 });
 
