@@ -4,7 +4,7 @@ import { generateDataset } from './utils/dataGenerator';
 import './App.css';
 
 function App() {
-  const rowData = useMemo(() => generateDataset(100000), []);
+  const rowData = useMemo(() => generateDataset(10000), []);
 
   return (
     <div className="App">
