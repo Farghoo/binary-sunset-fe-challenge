@@ -15,10 +15,6 @@ import type { IChipDisplayConfig } from '@/shared/interfaces/IChipDisplayConfig'
 
 import type { DeviceType, OrderStatus } from '../types/orders.types';
 
-// ---------------------------------------------------------------------------
-// Order status chip configs
-// ---------------------------------------------------------------------------
-
 export const STATUS_CHIP_CONFIG: Record<OrderStatus, IChipDisplayConfig> = {
   excellent: {
     variant: 'excellent',
@@ -46,10 +42,6 @@ export const STATUS_CHIP_CONFIG: Record<OrderStatus, IChipDisplayConfig> = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// Device chip configs
-// ---------------------------------------------------------------------------
-
 export const DEVICE_CHIP_CONFIG: Record<DeviceType, IChipDisplayConfig> = {
   desktop: {
     variant: 'desktop',
@@ -64,10 +56,6 @@ export const DEVICE_CHIP_CONFIG: Record<DeviceType, IChipDisplayConfig> = {
     ariaLabel: 'Device: Mobile',
   },
 };
-
-// ---------------------------------------------------------------------------
-// UTM source chip configs
-// ---------------------------------------------------------------------------
 
 const SOURCE_CHIP_CONFIG: Record<string, IChipDisplayConfig> = {
   gsearch: {

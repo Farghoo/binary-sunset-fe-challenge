@@ -10,7 +10,6 @@ const de: OrdersGridTranslations = {
     'Keine Daten entsprechen Ihren aktuellen Filtern. Versuchen Sie, die Filter zurückzusetzen.',
   retryLabel: 'Erneut versuchen',
 
-  // Column headers
   colOrderId: 'Bestellung #',
   colItemId: 'Artikel #',
   colDate: 'Datum',
@@ -29,12 +28,10 @@ const de: OrdersGridTranslations = {
   colStatus: 'Status',
   colRefunded: 'Erstattet',
 
-  // Column tooltips
   tooltipPrice:
     'Bearbeitbar — klicken zum Ändern des Preises. Gewinn und Status werden automatisch aktualisiert.',
   tooltipQty: 'Bearbeitbar — klicken zum Ändern der Menge.',
 
-  // Cell value labels
   valRepeat: '✓ Wiederkehrend',
   valNew: 'Neu',
   valRefundedYes: '✕ Ja',

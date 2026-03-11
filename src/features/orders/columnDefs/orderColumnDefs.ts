@@ -25,15 +25,7 @@ import {
   StatusChipCellRenderer,
 } from './renderers';
 
-// ---------------------------------------------------------------------------
-// t function type — matches useTranslation('ordersGrid') return
-// ---------------------------------------------------------------------------
-
 type TFn = (key: keyof OrdersGridTranslations) => string;
-
-// ---------------------------------------------------------------------------
-// Reusable value formatters (locale-independent)
-// ---------------------------------------------------------------------------
 
 const usdFormatter = (p: ValueFormatterParams<OrderAnalyticsRow, number>) =>
   p.value !== undefined && p.value !== null ? formatUsd(p.value) : '';
@@ -51,13 +43,8 @@ const dateFormatter = (p: ValueFormatterParams<OrderAnalyticsRow, string>) => {
   }
 };
 
-// ---------------------------------------------------------------------------
-// Factory — call with t() from useTranslation('ordersGrid')
-// ---------------------------------------------------------------------------
-
 export function getOrderColumnDefs(t: TFn): ColDef<OrderAnalyticsRow>[] {
   return [
-    // ── Identity ────────────────────────────────────────────────────────────
     {
       headerName: t('colOrderId'),
       field: 'order_id',
@@ -92,7 +79,6 @@ export function getOrderColumnDefs(t: TFn): ColDef<OrderAnalyticsRow>[] {
       valueFormatter: dateFormatter,
     },
 
-    // ── Product ─────────────────────────────────────────────────────────────
     {
       headerName: t('colProduct'),
       field: 'product_name',
@@ -102,7 +88,6 @@ export function getOrderColumnDefs(t: TFn): ColDef<OrderAnalyticsRow>[] {
       cellStyle: { fontWeight: 'var(--font-weight-medium)' },
     },
 
-    // ── Session ─────────────────────────────────────────────────────────────
     {
       headerName: t('colDevice'),
       field: 'device_type',
@@ -147,7 +132,6 @@ export function getOrderColumnDefs(t: TFn): ColDef<OrderAnalyticsRow>[] {
       },
     },
 
-    // ── Financial ───────────────────────────────────────────────────────────
     {
       headerName: t('colPrice'),
       field: 'price_usd',
@@ -207,7 +191,6 @@ export function getOrderColumnDefs(t: TFn): ColDef<OrderAnalyticsRow>[] {
       cellStyle: { textAlign: 'center', fontVariantNumeric: 'tabular-nums' },
     },
 
-    // ── Calculated ──────────────────────────────────────────────────────────
     {
       headerName: t('colRevenue'),
       field: 'revenue',
@@ -238,7 +221,6 @@ export function getOrderColumnDefs(t: TFn): ColDef<OrderAnalyticsRow>[] {
       cellRenderer: MarginCellRenderer,
     },
 
-    // ── Status ──────────────────────────────────────────────────────────────
     {
       headerName: t('colStatus'),
       field: 'status',

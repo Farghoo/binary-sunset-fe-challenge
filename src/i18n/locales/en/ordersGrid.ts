@@ -12,7 +12,6 @@ const en = {
   emptyDescription: 'No data matched your current filters. Try resetting the filters.',
   retryLabel: 'Retry',
 
-  // Column headers
   colOrderId: 'Order #',
   colItemId: 'Item #',
   colDate: 'Date',
@@ -31,11 +30,9 @@ const en = {
   colStatus: 'Status',
   colRefunded: 'Refunded',
 
-  // Column tooltips
   tooltipPrice: 'Editable — click to change price. Profit and status update automatically.',
   tooltipQty: 'Editable — click to change quantity.',
 
-  // Cell value labels
   valRepeat: '✓ Repeat',
   valNew: 'New',
   valRefundedYes: '✕ Yes',

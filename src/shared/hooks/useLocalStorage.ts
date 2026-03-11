@@ -36,8 +36,8 @@ export function useLocalStorage<T>(
         const next = value instanceof Function ? value(prev) : value;
         try {
           window.localStorage.setItem(key, JSON.stringify(next));
-        } catch {
-          // Storage quota exceeded or private mode — silently no-op.
+        } catch (_e) {
+          // localStorage write may fail in private browsing — silently ignore
         }
         return next;
       });

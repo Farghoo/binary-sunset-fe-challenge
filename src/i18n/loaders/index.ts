@@ -16,7 +16,6 @@ import type { Namespace, NamespaceTranslations } from '../types/namespace.types'
 type TranslationModule<N extends Namespace> = { default: NamespaceTranslations[N] };
 type NamespaceLoader<N extends Namespace> = () => Promise<TranslationModule<N>>;
 
-// Typed per-namespace to preserve the exact translation shape.
 type LocaleLoaders = {
   [N in Namespace]: NamespaceLoader<N>;
 };

@@ -23,16 +23,8 @@ import { ordersService } from '../services/ordersService';
 import type { EditableOrderFields, OrderAnalyticsRow } from '../types/orders.types';
 import { recalculateRow } from '../utils/calculations';
 
-// ---------------------------------------------------------------------------
-// Context
-// ---------------------------------------------------------------------------
-
 const OrdersContext = createContext<IOrdersContext | null>(null);
 OrdersContext.displayName = 'OrdersContext';
-
-// ---------------------------------------------------------------------------
-// Provider
-// ---------------------------------------------------------------------------
 
 interface OrdersProviderProps {
   children: React.ReactNode;
@@ -61,7 +53,6 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
     if (!gridApiRef.current) return;
     epochRef.current += 1;
     setIsPageLoading(true);
-    // Reset virtual row count to 0 so AG Grid does not keep old placeholder rows
     gridApiRef.current.setRowCount(0, false);
     gridApiRef.current.purgeInfiniteCache();
   }, []);
@@ -71,11 +62,8 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
       searchQueryRef.current = query;
       setSearchQueryState(query);
       if (gridApiRef.current) {
-        // Grid mounted: purge cache and show loading overlay
         purgeAndReset();
       } else {
-        // Grid unmounted (e.g. empty state shown): increment epoch and set
-        // loading so the grid remounts and fires the datasource on mount
         epochRef.current += 1;
         setIsPageLoading(true);
       }
@@ -93,7 +81,6 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
         const { startRow, endRow, sortModel, successCallback, failCallback } = params;
         const sortBy = sortModel[0]?.colId ?? '';
         const sortDir = (sortModel[0]?.sort ?? 'asc') as 'asc' | 'desc';
-        // Capture epoch BEFORE the async call
         const capturedEpoch = epochRef.current;
 
         try {
@@ -106,11 +93,8 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
           });
           setTotalRows(total);
           setError(null);
-          // Pass the real lastRow only on the final page so AG Grid grows the
-          // virtual scroll incrementally instead of pre-creating all rows.
           const isLastPage = startRow + rows.length >= total;
           successCallback(rows, isLastPage ? startRow + rows.length : -1);
-          // Only the latest epoch's first page may close the loading overlay
           if (startRow === 0 && capturedEpoch === epochRef.current) {
             setIsPageLoading(false);
           }
@@ -176,10 +160,6 @@ export function OrdersProvider({ children }: OrdersProviderProps) {
 
   return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
 }
-
-// ---------------------------------------------------------------------------
-// Consumer hook
-// ---------------------------------------------------------------------------
 
 export function useOrders(): IOrdersContext {
   const ctx = useContext(OrdersContext);

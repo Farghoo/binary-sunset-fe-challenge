@@ -13,7 +13,6 @@ const en = {
   retry: 'Try again',
   errorTitle: 'Something went wrong',
 
-  // Toast / notification messages
   toastClose: 'Close',
   toastDataSkipped: 'Some records could not be loaded due to validation errors.',
   toastI18nLoadError: 'Failed to load translations.',

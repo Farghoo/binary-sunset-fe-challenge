@@ -33,7 +33,6 @@ const OrdersGridToolbar = React.memo(function OrdersGridToolbar() {
   const [searchText, setSearchText] = React.useState('');
   const debouncedSearch = useDebounce(searchText, 300);
 
-  // Forward debounced search to context — triggers purgeInfiniteCache + reload
   React.useEffect(() => {
     setSearchQuery(debouncedSearch);
   }, [debouncedSearch, setSearchQuery]);

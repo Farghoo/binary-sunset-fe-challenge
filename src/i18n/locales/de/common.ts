@@ -7,7 +7,6 @@ const de: CommonTranslations = {
   retry: 'Erneut versuchen',
   errorTitle: 'Etwas ist schiefgelaufen',
 
-  // Toast / notification messages
   toastClose: 'Schließen',
   toastDataSkipped:
     'Einige Datensätze konnten aufgrund von Validierungsfehlern nicht geladen werden.',

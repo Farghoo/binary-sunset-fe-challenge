@@ -47,7 +47,6 @@ interface UseTranslationResult<N extends Namespace> {
 export function useTranslation<N extends Namespace>(namespace: N): UseTranslationResult<N> {
   const { locale, getTranslations, loadNamespace } = useI18n();
 
-  // Trigger lazy load on mount and whenever locale changes.
   useEffect(() => {
     loadNamespace(namespace);
   }, [namespace, locale, loadNamespace]);
@@ -57,7 +56,6 @@ export function useTranslation<N extends Namespace>(namespace: N): UseTranslatio
   const t = useCallback<TypedT<N>>(
     (key, params) => {
       const raw = translations[key as keyof typeof translations];
-      // Fallback to the key itself if not yet loaded — prevents blank UI.
       let str = typeof raw === 'string' ? raw : String(key);
 
       if (params) {

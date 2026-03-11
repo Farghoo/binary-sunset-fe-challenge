@@ -13,10 +13,7 @@ import { API_CONFIG } from '@/config/api.config';
 type Row = Record<string, unknown>;
 
 /** Simulated network latency — random delay between 3 s and 7 s per page. */
-// const simulateDelay = () =>
-//   new Promise<void>((resolve) => setTimeout(resolve, 1_500 + Math.random() * 3_500));
 
-// Lazy-loaded once, kept in memory for the session
 let cachedRows: Row[] | null = null;
 
 async function getAllRows(): Promise<Row[]> {
@@ -64,7 +61,6 @@ function applySort(rows: Row[], sortBy: string, sortDir: string): Row[] {
 }
 
 export const handlers = [
-  // GET /api/orders?offset=0&limit=20&search=...&sortBy=...&sortDir=asc
   http.get(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.orders}`, async ({ request }) => {
     const url = new URL(request.url);
     const offset = parseInt(url.searchParams.get('offset') ?? '0', 10);
@@ -83,7 +79,6 @@ export const handlers = [
     return HttpResponse.json({ data, total });
   }),
 
-  // GET /health
   http.get(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.health}`, () => {
     return HttpResponse.json({ status: 'ok', source: 'msw' });
   }),

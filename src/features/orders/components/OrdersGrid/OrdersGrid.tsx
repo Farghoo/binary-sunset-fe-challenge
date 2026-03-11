@@ -39,7 +39,6 @@ const OrdersGrid = React.memo(function OrdersGrid() {
   const gridCallbacks = useOrdersGrid();
   const { t } = useTranslation('ordersGrid');
 
-  // Rebuild column defs when language changes so headers re-render
   const columnDefs = useMemo(() => getOrderColumnDefs(t), [t]);
 
   if (error) {

@@ -28,16 +28,8 @@ import { LOADERS } from '../loaders';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '../types/locale.types';
 import type { Namespace, NamespaceTranslations } from '../types/namespace.types';
 
-// ---------------------------------------------------------------------------
-// Context
-// ---------------------------------------------------------------------------
-
 const I18nContext = createContext<II18nContext | null>(null);
 I18nContext.displayName = 'I18nContext';
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function cacheKey(locale: Locale, namespace: Namespace): string {
   return `${locale}:${namespace}`;
@@ -46,10 +38,6 @@ function cacheKey(locale: Locale, namespace: Namespace): string {
 function resolveLocale(raw: string): Locale {
   return (SUPPORTED_LOCALES as readonly string[]).includes(raw) ? (raw as Locale) : DEFAULT_LOCALE;
 }
-
-// ---------------------------------------------------------------------------
-// Provider
-// ---------------------------------------------------------------------------
 
 interface I18nProviderProps {
   children: React.ReactNode;
@@ -60,10 +48,8 @@ export function I18nProvider({ children }: I18nProviderProps) {
 
   const [locale, setLocaleState] = useState<Locale>(() => resolveLocale(storedLocale));
 
-  // Mutable cache — avoids cloning the Map on every namespace load.
   const cacheRef = useRef<Map<string, Record<string, string>>>(new Map());
 
-  // Bumped after each cache write so consumers re-render.
   const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
 
   const setLocale = useCallback(
@@ -75,7 +61,6 @@ export function I18nProvider({ children }: I18nProviderProps) {
   );
 
   const loadNamespace = useCallback(async (namespace: Namespace): Promise<void> => {
-    // Read locale from state — captured inside the callback.
     setLocaleState((currentLocale) => {
       const key = cacheKey(currentLocale, namespace);
       if (!cacheRef.current.has(key)) {
@@ -97,18 +82,13 @@ export function I18nProvider({ children }: I18nProviderProps) {
       const key = cacheKey(locale, namespace);
       return (cacheRef.current.get(key) ?? {}) as Partial<NamespaceTranslations[N]>;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [locale, forceUpdate] // forceUpdate identity never changes; used as a dep proxy
+    [locale] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const value: II18nContext = { locale, setLocale, getTranslations, loadNamespace };
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
-
-// ---------------------------------------------------------------------------
-// Internal hook — used only by useTranslation
-// ---------------------------------------------------------------------------
 
 export function useI18n(): II18nContext {
   const ctx = useContext(I18nContext);

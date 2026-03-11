@@ -22,7 +22,6 @@ import {
   type ToastSeverity,
 } from '../../notifications/notificationService';
 
-// Auto-hide durations per severity (ms)
 const DURATIONS: Record<ToastSeverity, number> = {
   error: 6_000,
   warning: 4_000,
@@ -43,14 +42,12 @@ function NotificationProvider() {
   const [current, setCurrent] = useState<ToastPayload | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Subscribe once on mount; clean up on unmount.
   useEffect(() => {
     return notificationService.subscribe((payload) => {
       setQueue((prev) => [...prev, payload]);
     });
   }, []);
 
-  // Dequeue — show next toast when Snackbar is idle.
   useEffect(() => {
     if (!open && queue.length > 0) {
       setCurrent(queue[0]);
@@ -60,14 +57,12 @@ function NotificationProvider() {
   }, [open, queue]);
 
   function handleClose(_event: React.SyntheticEvent | Event, reason?: string) {
-    // Ignore clickaway so the user can interact with the page without dismissing.
     if (reason === 'clickaway') return;
     setOpen(false);
   }
 
   if (!current) return null;
 
-  // Resolve message: attempt translation key lookup, fall back to raw string.
   const commonKeys = Object.keys({} as CommonTranslations);
   const isTranslationKey = commonKeys.length === 0 || true; // always attempt — t() falls back to key
   const displayMessage = isTranslationKey
