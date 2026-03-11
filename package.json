@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:e2e": "cross-env VITE_E2E=true vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:open": "cross-env VITE_E2E=true cypress open",
+    "cypress:run": "cross-env VITE_E2E=true cypress run"
   },
   "dependencies": {
     "ag-grid-community": "^35.1.0",
@@ -28,6 +29,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "cross-env": "^10.1.0",
     "cypress": "^15.11.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",

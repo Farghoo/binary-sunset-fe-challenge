@@ -3,5 +3,5 @@ import App from "./App";
 
 test("renders app title", () => {
   render(<App />);
-  expect(screen.getByText(/ag grid challenge/i)).toBeInTheDocument();
+  expect(screen.getByText(/ag grid challenge/i)).toBeTruthy();
 });
