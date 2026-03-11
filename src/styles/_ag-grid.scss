@@ -1,0 +1,86 @@
+// =============================================================================
+// AG Grid Theme Overrides
+//
+// Uses CSS custom properties from _variables.scss.
+// Never hardcode colors here — all values via var().
+// =============================================================================
+
+.ag-theme-alpine {
+  // Override AG Grid's built-in CSS variables with our design tokens
+  --ag-font-family: var(--font-family-base);
+  --ag-font-size: var(--font-size-base);
+  --ag-row-height: var(--grid-row-height);
+  --ag-header-height: var(--grid-header-height);
+  --ag-cell-horizontal-padding: var(--spacing-3);
+
+  --ag-border-color: var(--color-border-default);
+  --ag-background-color: var(--color-surface-primary);
+  --ag-odd-row-background-color: var(--color-surface-secondary);
+  --ag-row-hover-color: #eff6ff;
+  --ag-selected-row-background-color: #dbeafe;
+
+  --ag-header-background-color: var(--color-surface-secondary);
+  --ag-header-foreground-color: var(--color-text-secondary);
+
+  --ag-input-focus-border-color: #2563eb;
+  --ag-range-selection-border-color: #2563eb;
+  --ag-range-selection-background-color: rgba(37, 99, 235, 0.1);
+
+  // Header labels — uppercase, semibold
+  .ag-header-cell-label {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  // Editable cell indicator (amber tint from design tokens)
+  .ag-cell[col-id='price_usd'],
+  .ag-cell[col-id='items_purchased'] {
+    background-color: var(--color-surface-editable);
+    cursor: pointer;
+
+    &:hover {
+      background-color: #fef3c7;
+    }
+  }
+
+  // Focus ring on focused cell for keyboard users
+  .ag-cell:focus-within {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+  }
+
+  // Vertically center cell content — required for chip cell renderers
+  .ag-cell {
+    display: flex;
+    align-items: center;
+  }
+
+  // Loading row shimmer — shown while infinite datasource fetches a new block
+  @keyframes ag-shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .ag-row-loading .ag-cell::after {
+    content: '';
+    display: block;
+    height: 12px;
+    width: 60%;
+    border-radius: 4px;
+    background: linear-gradient(
+      90deg,
+      var(--color-border-default) 25%,
+      #e2e8f0 50%,
+      var(--color-border-default) 75%
+    );
+    background-size: 200% 100%;
+    animation: ag-shimmer 1.4s ease-in-out infinite;
+  }
+}
