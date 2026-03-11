@@ -1,0 +1,111 @@
+// =============================================================================
+// AG Grid Cell Renderers — Orders feature
+//
+// All colors via CSS custom properties.
+// Profit and Margin colors use semantic tokens, not status tokens,
+// because they represent financial direction rather than status.
+// =============================================================================
+
+// Shared cell layout
+.cellCenter {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.cellEnd {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: var(--spacing-1);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-semibold);
+}
+
+// ── Loading skeleton renderer ─────────────────────────────────────────────────
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.skeletonBar {
+  height: 12px;
+  border-radius: var(--radius-sm, 4px);
+  background: linear-gradient(
+    90deg,
+    var(--color-border-default) 25%,
+    var(--color-surface-secondary) 50%,
+    var(--color-border-default) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  width: 70%;
+}
+
+// ── Profit renderer ──────────────────────────────────────────────────────────
+
+.profitPositiveHigh {
+  color: var(--color-positive);
+}
+.profitPositiveLow {
+  color: var(--color-positive-mid);
+}
+.profitNegative {
+  color: var(--color-negative);
+}
+
+.profitArrow {
+  font-size: var(--font-size-xs);
+  aria-hidden: true; // Handled in JSX via aria-hidden attribute
+}
+
+// ── Margin renderer ──────────────────────────────────────────────────────────
+
+.marginWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  gap: 2px;
+  padding: 2px 0;
+}
+
+.marginValue {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight);
+}
+
+.marginBarTrack {
+  height: 3px;
+  background-color: var(--color-border-default);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.marginBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.15s ease;
+
+  // Status-driven bar color — data-status attribute set in JSX
+  &[data-status='excellent'] {
+    background-color: var(--color-status-excellent-fg);
+  }
+  &[data-status='good'] {
+    background-color: var(--color-status-good-fg);
+  }
+  &[data-status='warning'] {
+    background-color: var(--color-status-warning-fg);
+  }
+  &[data-status='loss'] {
+    background-color: var(--color-status-loss-fg);
+  }
+}

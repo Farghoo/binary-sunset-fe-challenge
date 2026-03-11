@@ -1,0 +1,17 @@
+#!/bin/sh
+# pre-commit: runs lint-staged on staged files.
+# lint-staged config: .lintstagedrc.json
+# Runs: prettier --write → eslint --fix → jest (related tests only)
+# A single lint error or failing test blocks the commit.
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+REBASE_PATH="$GIT_ROOT/.git/rebase-merge"
+MERGE_PATH="$GIT_ROOT/.git/MERGE_HEAD"
+
+if [ -f "$REBASE_PATH" ] || [ -f "$MERGE_PATH" ]; then
+  echo "Skipping pre-commit: rebase or merge in progress."
+  exit 0
+fi
+
+echo "Running lint-staged..."
+npx lint-staged

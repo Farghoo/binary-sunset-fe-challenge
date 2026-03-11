@@ -1,0 +1,142 @@
+// =============================================================================
+// Design Tokens — Single Source of Truth
+//
+// All colors, spacing, typography and radius values live here.
+// To switch themes: modify :root overrides or swap this file.
+// Components consume via CSS custom properties — never hardcode values.
+// =============================================================================
+
+:root {
+  // ---------------------------------------------------------------------------
+  // Status colors (drive chip renderer + margin bar)
+  // ---------------------------------------------------------------------------
+  --color-status-excellent-bg: #dcfce7;
+  --color-status-excellent-fg: #166534;
+  --color-status-excellent-border: #86efac;
+
+  --color-status-good-bg: #dbeafe;
+  --color-status-good-fg: #1e40af;
+  --color-status-good-border: #93c5fd;
+
+  --color-status-warning-bg: #fef9c3;
+  --color-status-warning-fg: #854d0e;
+  --color-status-warning-border: #fde047;
+
+  --color-status-loss-bg: #fee2e2;
+  --color-status-loss-fg: #991b1b;
+  --color-status-loss-border: #fca5a5;
+
+  // ---------------------------------------------------------------------------
+  // Semantic colors
+  // ---------------------------------------------------------------------------
+  --color-positive: #166534;
+  --color-positive-mid: #92400e;
+  --color-negative: #991b1b;
+  --color-neutral: #6b7280;
+
+  // ---------------------------------------------------------------------------
+  // Surface & Background
+  // ---------------------------------------------------------------------------
+  --color-bg-app: #f9fafb;
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f9fafb;
+  --color-surface-tertiary: #f3f4f6;
+  --color-surface-editable: #fffbeb; // Editable cell highlight
+
+  // ---------------------------------------------------------------------------
+  // Border
+  // ---------------------------------------------------------------------------
+  --color-border-default: #e5e7eb;
+  --color-border-strong: #d1d5db;
+
+  // ---------------------------------------------------------------------------
+  // Text
+  // ---------------------------------------------------------------------------
+  --color-text-primary: #111827;
+  --color-text-secondary: #374151;
+  --color-text-muted: #6b7280;
+  --color-text-placeholder: #9ca3af;
+
+  // ---------------------------------------------------------------------------
+  // Device chip colors
+  // ---------------------------------------------------------------------------
+  --color-chip-desktop-bg: #f3f4f6;
+  --color-chip-desktop-fg: #374151;
+  --color-chip-desktop-border: #d1d5db;
+
+  --color-chip-mobile-bg: #ede9fe;
+  --color-chip-mobile-fg: #5b21b6;
+  --color-chip-mobile-border: #c4b5fd;
+
+  // ---------------------------------------------------------------------------
+  // UTM Source chip colors
+  // ---------------------------------------------------------------------------
+  --color-chip-google-bg: #e0f2fe;
+  --color-chip-google-fg: #0c4a6e;
+  --color-chip-google-border: #7dd3fc;
+
+  --color-chip-bing-bg: #fff7ed;
+  --color-chip-bing-fg: #9a3412;
+  --color-chip-bing-border: #fdba74;
+
+  --color-chip-social-bg: #fdf2f8;
+  --color-chip-social-fg: #831843;
+  --color-chip-social-border: #f0abfc;
+
+  --color-chip-direct-bg: #f9fafb;
+  --color-chip-direct-fg: #111827;
+  --color-chip-direct-border: #e5e7eb;
+
+  // ---------------------------------------------------------------------------
+  // Spacing scale
+  // ---------------------------------------------------------------------------
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+
+  // ---------------------------------------------------------------------------
+  // Typography
+  // ---------------------------------------------------------------------------
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+
+  // ---------------------------------------------------------------------------
+  // Border radius
+  // ---------------------------------------------------------------------------
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  // ---------------------------------------------------------------------------
+  // Shadows
+  // ---------------------------------------------------------------------------
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+
+  // ---------------------------------------------------------------------------
+  // Grid dimensions
+  // ---------------------------------------------------------------------------
+  --grid-row-height: 42px;
+  --grid-header-height: 44px;
+  --toolbar-height: 56px;
+}

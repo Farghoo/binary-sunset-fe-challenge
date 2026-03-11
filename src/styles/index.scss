@@ -1,0 +1,12 @@
+// =============================================================================
+// Global Stylesheet Entry Point
+//
+// Import order matters:
+//   1. Variables (custom properties — must come first)
+//   2. Reset
+//   3. Third-party overrides
+// =============================================================================
+
+@use 'variables'; // CSS custom property definitions
+@use 'reset'; // Base reset & accessibility utilities
+@use 'ag-grid'; // AG Grid theme overrides

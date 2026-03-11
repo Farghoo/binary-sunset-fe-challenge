@@ -1,0 +1,15 @@
+#!/bin/sh
+# commit-msg: validates commit message against Conventional Commits.
+# Format: <type>(<scope>): <subject>
+# Types: feat | fix | docs | style | refactor | perf | test | chore | revert
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+REBASE_PATH="$GIT_ROOT/.git/rebase-merge"
+MERGE_PATH="$GIT_ROOT/.git/MERGE_HEAD"
+
+if [ -f "$REBASE_PATH" ] || [ -f "$MERGE_PATH" ]; then
+  echo "Skipping commit-msg: rebase or merge in progress."
+  exit 0
+fi
+
+npx --no -- commitlint --edit "$1"

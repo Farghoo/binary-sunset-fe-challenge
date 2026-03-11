@@ -1,0 +1,38 @@
+// =============================================================================
+// MainLayout
+// =============================================================================
+
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--color-bg-app);
+  padding: var(--spacing-4);
+  gap: var(--spacing-3);
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.appTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-surface-primary);
+}
