@@ -81,7 +81,11 @@ Unit tests cover calculation logic and renderer behavior.
 
 ### Scripts
 `npm run dev` – start dev server
+
 `npm run dev:e2e` – start dev server with E2E settings enabled
+
 `npm test` – run Jest tests
+
 `npm run cypress:open` – open Cypress UI (E2E mode flag is applied)
+
 `npm run cypress:run` – run Cypress headless (E2E mode flag is applied)
