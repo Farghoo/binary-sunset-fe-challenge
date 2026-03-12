@@ -1,119 +1,91 @@
-## Binary Sunset FE Challenge – AG Grid Data Table
+# Binary Sunset FE Challenge — AG Grid Table
 
-### Objective
+This project demonstrates a high-performance AG Grid table with:
+- **20,000+ rows** (generated data)
+- **Mixed data types** (string, number, boolean)
+- **Custom cell renderers**
+  - “Chips” renderer for categories and status indicators
+  - Calculation renderer for derived numeric values
+- **Dynamic row-level calculations** (recomputed instantly on edits)
+- **Real-time, input-driven updates** (editing Revenue/Cost updates Profit/Margin/Status)
+- **Testing**
+  - Unit tests (calculation logic, renderers, update mechanism)
+  - Cypress E2E tests (edit + large dataset interaction)
 
-Develop a **high-performance, interactive data table** using **AG Grid** that demonstrates:
-- **Advanced cell rendering**
-- **Dynamic, row-level calculations**
-- **Real-time, input-driven updates**
+## Setup
 
-The solution should be **robust, well-tested**, and capable of handling **large datasets (10,000+ rows)** efficiently.
+### Prerequisites
+- Node.js 18+ (recommended)
+- npm
 
-### Requirements
+### Install dependencies
+```bash
+npm install
+```
 
-#### AG Grid Implementation
+### Run the app (development)
+```bash
+npm run dev
+```
 
-- **Large dataset**: Display **at least 10,000 rows** of data.
-- **Data variety**: Include a mix of **string**, **number**, and **boolean** fields.
-- **Performance features**:
-  - Use **AG Grid virtualization** and appropriate **performance optimizations**.
-  - Ensure **smooth scrolling**, sorting, and interaction even with the full dataset.
+### Run unit tests (Jest)
+```bash
+npm test
+```
 
-#### Custom Cell Renderers
+### Run E2E tests (Cypress)
+#### 1) Start the dev server (E2E mode)
+This enables a test-only configuration to reduce flakiness (disables column virtualization so off-screen columns are still queryable).
 
-- **Chips renderer**:
-  - Create a custom cell renderer that displays values as styled **“chips”** (badges/tags).
-  - The chip’s appearance (e.g. **color**, **icon**, **label**) should change based on:
-    - The cell’s raw value, and/or
-    - A **calculated status** (e.g. `"High Priority"`, `"Pending"`, `"Completed"`, `"Warning"`).
-- **Calculation display renderer**:
-  - Implement a custom cell renderer to show **results of dynamic calculations**.
-  - This should clearly reflect updated values when underlying data changes.
+```bash
+npm run dev:e2e
+```
+#### 2) Run Cypress
+In a separate terminal:
+```bash
+npm run cypress:run
+```
+Or interactively:
+```bash
+npm run cypress:open
+```
 
-#### Dynamic Calculations
+### How the grid works
+#### Data
+Rows represent Products with a Category, Active flag, and numeric fields:
+- Revenue (editable)
+- Cost (editable)
+Calculated columns
+- Profit = Revenue − Cost
+- Margin = Profit / Revenue
+- Status (chips)
 
-- **Calculated columns**:
-  - Include **at least two columns** whose values are **derived from other columns** in the same row.
-  - These values must **recalculate in real-time** when source data changes.
-- **Interaction with chips renderer**:
-  - One calculated column should **influence a chips-rendered column**.
-  - Example: If a calculated `Profit` column falls below a threshold, a `Status` column (using the chips renderer) should show `"Warning"` or similar.
+Status is derived from row values:
+- **Inactive** if isActive = false
+- **Critical** if Profit < 0
+- **Warning** for low profit or low margin
+- **High** for high profit and high margin
+- **Ok** otherwise
 
-#### Input Fields for Interaction
+Editing Revenue/Cost triggers recalculation and refresh of dependent cells and chips.
 
-- **Editable cells**:
-  - Make at least one column **directly editable** via input fields (e.g. number/text inputs).
-- **Update behavior**:
-  - Editing a value must:
-    - **Instantly update** that cell’s value in the grid.
-    - **Trigger recalculation** of any **dependent calculated columns**.
-    - **Update any affected chips** in related cells (e.g. status indicators).
+### Assumptions & trade-offs
+**Performance**: Uses AG Grid’s row virtualization by default and avoids heavy per-cell work. Renderers are lightweight and memoized.
+**Calculated values**: Implemented via valueGetter for real-time updates without maintaining duplicated state.
 
-#### Performance
+### Testing strategy:
+JSDOM is not ideal for fully validating AG Grid virtualization and cell editing, so Cypress E2E is the source of truth for interaction + large dataset behavior.
+Unit tests cover calculation logic and renderer behavior.
 
-- The table must remain **highly performant and responsive** with **10,000+ entries** while:
-  - Scrolling
-  - Editing values
-  - Sorting / filtering (if implemented)
-- You should:
-  - **Minimize unnecessary re-renders**
-  - Optimize **data update flows** to prevent UI lag.
+**E2E stability**: In E2E mode we disable column virtualization to keep selectors stable (this does not change production behavior).
 
-#### Testing
+### Scripts
+`npm run dev` – start dev server
 
-- **Unit tests**:
-  - Cover **custom cell renderers**.
-  - Cover **calculation logic**.
-  - Cover **data update mechanisms** (e.g. how edits propagate to dependent cells).
-- **Integration / E2E tests**:
-  - Add integration or end-to-end tests for **critical user flows**, such as:
-    - Editing a value and seeing dependent values + chips update.
-    - Interacting with a large dataset (e.g. scrolling and editing combined).
-- Aim for **good test coverage** on **all custom components and logic**.
+`npm run dev:e2e` – start dev server with E2E settings enabled
 
-### Deliverables
+`npm test` – run Jest tests
 
-- **Functional web application** demonstrating:
-  - AG Grid table with **10,000+ rows**
-  - **Custom chips renderer**
-  - **Custom calculation renderer**
-  - **Dynamic calculations** and **editable inputs** that propagate changes
-- **Source code**, including:
-  - Custom components and renderers
-  - Data generation logic (for the 10k+ rows)
-  - Tests (unit + integration/E2E where applicable)
-- A **clear setup guide** in this `README` (see below).
+`npm run cypress:open` – open Cypress UI (E2E mode flag is applied)
 
-### Technology Stack (Suggested)
-
-- **Framework**: React
-- **Grid library**: AG Grid (latest stable version)
-  - Official React getting started guide: [`https://www.ag-grid.com/react-data-grid/getting-started/`](https://www.ag-grid.com/react-data-grid/getting-started/)
-  - You may use the **AG Grid Enterprise** version **for testing purposes** if you wish; the evaluation **watermark is acceptable** for this challenge.
-- **Testing**:
-  - Jest
-  - React Testing Library
-  - Cypress (or a similar framework) for E2E / integration tests
-
-You are free to add supporting libraries and tooling as needed, but please keep the stack **focused and justifiable**.
-
-### Getting Started (What We Expect in Your Submission)
-
-When you implement your solution, please make sure your repository includes:
-
-- **Setup instructions**:
-  - How to install dependencies
-  - How to run the development server
-  - How to run the test suite and (if applicable) Cypress or other E2E tests
-- **Any assumptions or trade-offs** you made, documented briefly in this file.
-
-For this challenge repository, your task is to:
-
-1. **Fork** this repository to your own GitHub account.
-2. Implement the AG Grid-based table as described above.
-3. Add appropriate tests.
-4. Ensure the app runs reliably and performs well with large datasets.
-5. **Open a Pull Request** from your fork back to this repository (`Farghoo/binary-sunset-fe-challenge`) with:
-   - A clear title and short description of your solution.
-   - Any notes on trade-offs, assumptions, or limitations.
-
+`npm run cypress:run` – run Cypress headless (E2E mode flag is applied)

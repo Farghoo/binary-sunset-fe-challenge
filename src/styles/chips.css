@@ -1,0 +1,24 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    line-height: 18px;
+    border: 1px solid rgba(0,0,0,0.15);
+    user-select: none;
+    white-space: nowrap;
+  }
+  
+  .chip__icon { font-size: 12px; }
+  
+  .chip--high { background: rgba(0, 200, 0, 0.12); }
+  .chip--ok { background: rgba(0, 150, 255, 0.12); }
+  .chip--warning { background: rgba(255, 170, 0, 0.18); }
+  .chip--critical { background: rgba(255, 0, 0, 0.14); }
+  .chip--inactive { background: rgba(120, 120, 120, 0.16); }
+  .chip--neutral { background: rgba(180, 180, 180, 0.14); }
+  
+  .calc { font-variant-numeric: tabular-nums; }
+  .calc--neg { font-weight: 600; }
