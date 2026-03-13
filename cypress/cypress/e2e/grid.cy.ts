@@ -1,6 +1,6 @@
 describe("AG Grid Product Inventory", () => {
   beforeEach(() => {
-    cy.visit("/");
+    cy.visit("http://localhost:5173");
     // Wait for grid to render
     cy.get(".ag-root-wrapper", { timeout: 10000 }).should("be.visible");
     cy.get(".ag-row", { timeout: 10000 }).should("have.length.greaterThan", 0);
